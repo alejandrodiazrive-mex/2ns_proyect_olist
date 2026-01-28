@@ -1,0 +1,12 @@
+origin,total_leads,won_deals,conv_rate_pct,avg_days_to_close
+NULL,60,14,23.33,49.2
+unknown,1099,179,16.29,41.3
+paid_search,1586,195,12.30,56.6
+organic_search,2296,271,11.80,50.0
+direct_traffic,499,56,11.22,31.1
+referral,284,24,8.45,32.5
+social,1350,75,5.56,61.0
+display,118,6,5.08,10.3
+other_publicities,65,3,4.62,39.3
+email,493,15,3.04,52.2
+other,150,4,2.67,15.3
