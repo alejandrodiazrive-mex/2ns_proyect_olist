@@ -20,9 +20,7 @@ Budget Leakage: Social Media generates the highest volume of leads but shows the
 
 Sales Velocity: Leads from Direct Traffic close deals 30% faster than those from paid advertising channels.
 
-### Visualización del Embudo
-![Gráfico de Dispersión Olist](viz/conversion_vs_velocity.png)
-
+![Gráfico de Dispersión Olist](viz/conversion_vs_velocity.PNG)
 📁 Repository Structure
 
 olist_analysis.sql: Core query implementing funnel logic and deal closing time calculations.
