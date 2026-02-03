@@ -1,0 +1,136 @@
+nombre del repo: 2ns_proyect_olist
+
+carpeta viz 
+conversion_vs_velocity.PNG (es un scatter plot)
+
+01_marketing_conversion_funnel.sql
+
+/* BUSINESS CASE: Marketing Funnel Efficiency.
+  Goal: Identify which channels (Origin) produce the fastest and highest conversions.
+*/
+
+SELECT 
+    m.origin,
+    COUNT(m.mql_id) AS total_leads,
+    COUNT(c.mql_id) AS won_deals,
+    -- Conversion Rate
+    ROUND((COUNT(c.mql_id)::numeric / COUNT(m.mql_id) * 100), 2) AS conv_rate_pct,
+    -- Time to Close (Sales Velocity)
+    ROUND(AVG(c.won_date::date - m.first_contact_date::date), 1) AS avg_days_to_close
+FROM olist_mql m
+LEFT JOIN olist_closed c ON m.mql_id = c.mql_id
+GROUP BY 1
+HAVING COUNT(m.mql_id) > 50 -- Filter out noise from low-volume origins
+ORDER BY conv_rate_pct DESC;
+
+02_sales_velocity_outliers.sql
+
+/* GOAL: Identify leads that take 2x the average time to close.
+WHY: Long sales cycles may increase CAC (Customer Acquisition Cost).
+*/
+
+WITH velocity_stats AS (
+    SELECT 
+        AVG(c.won_date::date - m.first_contact_date::date) AS global_avg_days
+    FROM olist_mql m
+    JOIN olist_closed c ON m.mql_id = c.mql_id
+)
+SELECT 
+    m.origin,
+    c.business_segment,
+    c.lead_type,
+    (c.won_date::date - m.first_contact_date::date) AS days_to_close,
+    CASE 
+        WHEN (c.won_date::date - m.first_contact_date::date) > (SELECT global_avg_days * 2 FROM velocity_stats) THEN 'Critical Lag'
+        WHEN (c.won_date::date - m.first_contact_date::date) > (SELECT global_avg_days FROM velocity_stats) THEN 'Slow'
+        ELSE 'Efficient'
+    END AS efficiency_flag
+FROM olist_mql m
+JOIN olist_closed c ON m.mql_id = c.mql_id
+ORDER BY days_to_close DESC
+LIMIT 20;
+
+README.md
+
+Olist Marketing Funnel: Conversion & Efficiency Optimization
+📊 SQL-Based Lead Performance Analysis
+Author: Alejandro Diaz
+Role: Data Analyst | Business Intelligence Focus
+
+🎯 Business Case
+Olist seeks to identify which marketing channels are most efficient at converting leads into closed deals. This project focuses on SQL execution and KPI analysis from a junior data analyst perspective, identifying bottlenecks in the sales funnel by comparing lead generation volume against sales velocity.
+
+📈 Key Findings (Data Insights)
+Channel Efficiency: Paid Search and Organic Search lead the funnel performance, with conversion rates above 11%.
+Efficiency Gap: Social Media generates the highest volume of leads (1,350) but shows the weakest conversion performance (5.5%) and the longest sales cycle (61 days).
+Sales Velocity: Leads from Direct Traffic close deals 30% faster than those from paid advertising channels, suggesting higher intent.
+⚙️ Project Scope & Limitations
+To maintain analytical rigor, the following boundaries were established for this study:
+
+Proxy for Success: Conversion is measured by won_date. Financial value (Revenue) per deal was not included in this phase as it requires a secondary join with order items.
+Cost Data: CAC (Customer Acquisition Cost) is not calculated because marketing spend per channel was not provided in the dataset.
+Attribution: This analysis uses a "First Touch" attribution model based on the first_contact_date.
+💡 Strategic Recommendations
+Efficiency Trade-off Identified: While Social Media generates a high volume of leads, it presents the lowest conversion rate and the slowest sales cycle across the company.
+
+Recommendations for Stakeholders: 1. Audit the sales script for Social Media leads to identify friction points. 2. Trial Budget Reallocation: Consider reallocating 15-20% of the Social budget toward Paid Search, which demonstrates a similar sales cycle but a 2x higher conversion rate.
+
+📁 Repository Structure
+File	Description	Business Logic
+01_marketing_conversion_funnel.sql	Core Query	Implements funnel logic, conversion rates, and sales velocity.
+02_sales_velocity_outliers.sql	Friction Audit	Identifies leads with "Critical Lag" (>2x average days to close).
+data/	Source Datasets	Original Marketing Qualified Leads (MQLs) and Closed Deals data.
+💻 Technical Stack
+SQL (PostgreSQL): Relational modeling, CTEs, Window Functions, Interval calculations.
+Business Intelligence: Funnel Metrics, Sales Velocity, Outlier Detection.
+Visualization: Scatter plots for Conversion vs. Velocity.
+
+marketing_performance.csv
+
+olist_closed_deals_dataset.csv
+
+olist_marketing_qualified_leads_dataset.csv
+
+Commits on Feb 1, 2026
+Docs: Refine README tone, clarify scope, and improve strategic recommendations
+alejandrodiazrive-mex
+alejandrodiazrive-mex
+committed
+18 hours ago
+Refactor: rename analysis script and update README with strategic insights
+alejandrodiazrive-mex
+alejandrodiazrive-mex
+committed
+18 hours ago
+Add: Sales velocity outlier analysis to identify funnel friction
+alejandrodiazrive-mex
+alejandrodiazrive-mex
+committed
+18 hours ago
+Commits on Jan 28, 2026
+docs: fix image case sensitivity in README
+alejandrodiazrive-mex
+alejandrodiazrive-mex
+committed
+5 days ago
+docs: display dashboard visualization in README
+alejandrodiazrive-mex
+alejandrodiazrive-mex
+committed
+5 days ago
+docs: add marketing conversion scatter plot
+alejandrodiazrive-mex
+alejandrodiazrive-mex
+committed
+5 days ago
+feat: initial analysis of Olist Marketing Funnel
+alejandrodiazrive-mex
+alejandrodiazrive-mex
+committed
+5 days ago
+Commits on Jan 27, 2026
+first commit
+alejandrodiazrive-mex
+alejandrodiazrive-mex
+committed
+last week
