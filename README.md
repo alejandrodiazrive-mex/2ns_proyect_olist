@@ -78,6 +78,10 @@ This project has migrated from ad-hoc SQL scripts to a production-ready data pip
 * **Authentication:** OAuth 2.0 (Security Best Practice)
 * **Modeling Strategy:** Modular Data Lineage (Staging -> Marts)
 
+### 🔗 Data Lineage
+![Data Lineage](viz/dbt_lineage.png)
+*Visual representation of the automated data pipeline from BigQuery (Raw) to Staging and Business Marts.*
+
 ---
 
 ## 🧠 Why This Matters
