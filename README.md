@@ -1,9 +1,9 @@
-# Revenue Efficiency & GTM Analytics (SaaS Series B Framework)
+# B2B Marketplace Sales Efficiency (Olist GTM Analytics)
 
 ## 🎯 Strategic Context
-In a Series B scaling phase, capital efficiency is the priority. This project migrates a legacy SQL analysis to a **Modern Data Stack (dbt + BigQuery)** to optimize the **LTV/CAC Ratio**. 
+In a marketplace scaling phase, capital efficiency is the priority. This project migrates a legacy SQL analysis to a **Modern Data Stack (dbt + BigQuery)** to optimize **Seller Acquisition Cost (CAC)** and **Time-to-Revenue**. 
 
-The goal is to identify friction in Sales Velocity and misalignments with our **Ideal Customer Profile (ICP)**, moving from "vanity metrics" (lead volume) to "efficiency metrics" (revenue per rep/day).
+The goal is to identify friction in Sales Velocity and misalignments with our **Ideal Seller Profile (ISP)**, moving from "vanity metrics" (lead volume) to "efficiency metrics" (revenue per rep/day).
 
 ---
 
@@ -32,7 +32,7 @@ This project moves beyond ad-hoc scripts to a production-grade pipeline using **
 * **Warehouse:** Google BigQuery (Standard SQL)
 * **Transformation:** dbt Core (Jinja Templating, Macros)
 * **Orchestration:** Directed Acyclic Graph (DAG) via dbt
-* **Data Quality:** Automated schema tests (Unique, Not Null)
+* **Data Quality:** Automated schema tests (Unique, Not Null, Relationships)
 
 ### 🔗 Data Lineage
 ![Data Lineage](viz/dbt_lineage.png)
@@ -46,8 +46,8 @@ This data product enables the following GTM decisions:
 
 | Scenario (Data Trigger) | Strategic Action |
 | :--- | :--- |
-| **Velocity Drop:** `days_to_revenue` > 45 days | Trigger "High-Touch" sales intervention for Mid-Market accounts. |
-| **ICP Mismatch:** Low conversion in `High-Tier` segment | Review Marketing messaging alignment with Product features. |
+| **Velocity Drop:** `days_to_revenue` > 45 days | Trigger "High-Touch" sales intervention for Mid-Market sellers. |
+| **ISP Mismatch:** Low conversion in `Enterprise Seller` segment | Review Marketing messaging alignment with platform benefits. |
 | **Quality Alert:** `stg_mql` tests fail | Halt downstream reporting updates to prevent polluted dashboards. |
 
 ---
@@ -57,12 +57,12 @@ This data product enables the following GTM decisions:
 | Directory | Layer Type | Description |
 | :--- | :--- | :--- |
 | `olist_project/models/staging` | **Bronze/Silver** | Cleans raw data, handles NULLs (`COALESCE`), and standardizes dates. |
-| `olist_project/models/marts` | **Gold** | Joins tables to calculate `days_to_revenue` and segments by `icp_profile`. |
-| `olist_project/tests` | **QA** | Automated assertions to ensure `mql_id` uniqueness and referential integrity. |
+| `olist_project/models/marts` | **Gold** | Joins tables to calculate `days_to_revenue` and segments by `icp_segment`. |
+| `olist_project/tests` | **QA** | Automated assertions to ensure `mql_id` uniqueness and referential integrity between models. |
 | `legacy_analysis/` | **Archive** | Original exploratory SQL scripts (kept for historical context). |
 
 ---
 
 ## 🧠 Why This Matters (The "Senior" Take)
-When scaling a SaaS, **Speed to Revenue** is the ultimate metric. 
+When scaling a B2B Marketplace, **Speed to Revenue** is the ultimate metric. 
 By implementing this architecture, we decouple "Data Cleaning" from "Business Analysis," allowing the Revenue Operations team to trust the numbers and focus on closing deals, while the pipeline ensures data quality automatically.

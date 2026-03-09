@@ -11,9 +11,12 @@ models:
         tests:
           - not_null
 
-  - name: stg_closed_deals
+- name: stg_closed_deals
     columns:
       - name: mql_id
         tests:
           - unique
           - not_null
+          - relationships:
+              to: ref('stg_mql')
+              field: mql_id
